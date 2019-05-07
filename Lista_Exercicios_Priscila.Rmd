@@ -1,0 +1,479 @@
+---
+title: "Lista de Exercícios 1"
+author: "Priscila"
+date: "Goiânia-GO, `r format(Sys.Date(), '%d/%B/%Y')`"
+in_header: \usepackage{graphicx, color, verbatim, fancyvrb, setspace, amsfonts, amsmath, amssymb, pandoc}
+output: 
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+# LISTA DE EXERCÍCIOS SOBRE FUNÇÕES
+
+```{r Exercício 1}
+# 1) Elabore uma função que converta uma medida de temperatura em °C (graus Celsius) para °F (graus Fahrenheit), e Arredonde todos os resultados para 1 casa decimal.
+# Dicas: a)Fórmula: (°C x 9 / 5 ) + 32 = °F e b) Arredonde todos os resultados para 1 casa decimal.
+
+TCelsiustoFahrenheit <- function(C = 10, ncasas = 1) { 
+                                                      if(is.numeric(C)) { 
+                                                     round((C * (9 / 5) + 32), ncasas)
+                                                     } 
+                                                     else {
+                                                     return(print("Parametrico não numérico repassado"))
+                                                     } 
+}
+
+cat("Função que permite a conversão de temperatura de °C para °F")
+cat("\n")
+cat("0ºC =", TCelsiustoFahrenheit(0), "ºF")
+```
+
+```{r Exercício 2}
+# 2) Elabore outra que execute a conversão oposta de °F para °C, também com 1 casa decimal
+
+TFahrenheittoCelsius <- function(F = 10, ncasas = 1) { 
+                                                     if(is.numeric(F)) {
+                                                     round(((5 / 9) * (F - 32)), ncasas)
+                                                     } 
+                                                     else {
+                                                     return(print("Parametrico não numérico repassado"))
+                                                     } 
+}
+cat("Função que permite a conversão de temperatura de °F para °C", "\n")
+cat("32ºF =", TFahrenheittoCelsius(32), "ºC")
+
+```
+
+```{r Exercício 3}
+
+# 3) Elabore uma terceira função que permita as duas conversões
+# Dicas: a-Lance mão de um argumento do tipo lógico ou do tipo character; b-Use outro argumento para o número de casas decimais desejado pelo usuário.
+
+ConvTemp <- function(temp, tftotc = TRUE, ncasas = 1) {
+                                                      ifelse(tftotc == TRUE, 
+                                                      {tempf <- round( ((5 / 9) * (temp - 32)), ncasas)
+                                                       return(tempf)
+                                                      }, 
+                 
+                                                      {tempc <- round((temp * 1.8 + 32), ncasas)
+                                                       return(tempc)
+                                                      }
+                                                      ) 
+}
+cat("Função que permite as duas conversões", "\n")
+cat("32ºF =", ConvTemp(32, TRUE, 2), "ºC", "\n")
+cat("32ºC =", ConvTemp(32, FALSE, 2), "ºF")
+
+```
+
+```{r Exercício 4a}
+
+# Dado um vetor de n posições contendo uma sequência de valores de temperatura em °C, forneça uma função que retorne outro vetor com sua conversão para °F.
+
+TCelsiustoFahrenheit <- function(tc, ncasas = 1) { 
+                                                 if(is.numeric(tc)) { 
+                                                 round((tc * (9 / 5) + 32), ncasas)
+                                                 } 
+                                                 else {
+                                                 return(print("Parametrico não numérico repassado"))
+                                                 } 
+}
+
+x <- c(0, 32, 64)
+cat("Vetor de Temperaturas:", x, "\n")
+cat("Vetor de temperaturas convertidas de ºC para ºF:", TCelsiustoFahrenheit(x))
+
+```
+
+
+```{r Exercício 4b}
+# Elabore outra função que retorne a conversão oposta de um vetor de n posíções, com outro vetor de °F para °C.
+
+TFahrenheittoCelsius <- function(F = 10, ncasas = 1) { 
+                                                     if(is.numeric(F)) { 
+                                                     round(((5 / 9) * (F - 32)), ncasas)
+                                                     } 
+                                                     else {
+                                                     return(print("Parametrico não numérico repassado"))
+                                                     } 
+}
+
+x <- c(0, 32, 64)
+cat("Vetor de Temperaturas:", x, "\n")
+cat("Vetor de temperaturas convertidas de ºF para ºC:", TFahrenheittoCelsius(x))
+
+```
+
+
+```{r Exercício 5}
+# Escreva uma função que permita as duas conversões de vetores de temperaturas(°C -> °F ou °F -> °C). E que o usuário possa indicar o número de casas decimais desejados.
+
+vetortemp <- function(temp, tftotc = TRUE, ncasas) {
+                                                  ifelse(tftotc == TRUE, 
+                                                  {tempf <- round(((5 / 9) * (temp - 32)), ncasas)
+                                                  return(tempf)
+                                                   },
+                                                  {tempc <- round((temp * 1.8 + 32), ncasas)
+                                                  return(tempc)
+                                                   })
+}        
+
+x <- c(0, 32, 64)
+cat("vetor de Temperaturas", x, "\n")
+cat("Vetor de temperaturas convertidas de ºF para ºC:", vetortemp(x, TRUE, 1), "\n")
+cat("Vetor de temperaturas convertidas de ºC para ºF:", vetortemp(x, FALSE, 1))
+
+```
+
+# Uma análise do clima de Goiânia em 2018
+
+```{r Exercício 6}
+
+# Construa um dataframe com dados de Goiânia para o ano de 2018: 1ª coluna – campo tipo date (dia-mês-ano) e 2ª coluna – temperatura média diária em Goiânia (buscar fontes oficiais de daods na web) 
+
+coluna1 <- seq.Date(as.Date("2018-01-01"), length.out = 365, by = "day")
+
+# 1ª coluna – campo tipo date (dia-mês-ano) - formato compatível com o Português
+print(format(coluna1, "%d/%m/%Y")) # retorna um vector
+
+# 2ª coluna – temperatura média diária em Goiânia (dados INMET)
+dados <- read.csv("dados_mod.csv", header = TRUE, sep = ";", dec = ".")
+coluna2 <- dados[,6]
+coluna2
+
+# 2ª coluna(a) – temperatura média diária em Goiânia (dados INMET) - dados construidos
+coluna2a <- c(27.14, 25.16, 24.54, 24.28, 23.96, 22.1, 23.38, 22.62, 23.1, 26.08, 27.06, 24.12, 25.42, 23.42, 23.8, 23.84, 26.4, 27.64, 28.46, 28.92, 28.5, 27.44, 28.34, 27.7, 25.2, 23.82, 24.44, 24.1, 24.08, 25.08, 24.74, 24.48, 24.46, 22.24, 22.98, 22.26, 23.82, 24.3, 25.76, 25.52, 23.54, 26.52, 26.3, 27.18, 28.08, 27, 27.08, 26.88, 24.28, 23.52, 25.34, 25.4, 22.96, 23.02, 24.2, 25.02, 23.56, 26.08, 25.52, 26.86, 25.48, 27.12, 27.72, 26.26, 25.26, 25.34, 23.74, 24.2, 24.32, 22.48, 25.62, 26.62, 25.58, 26.92, 25.04, 24.48, 25.66, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 26.26, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 23.46, 23.66, 22.98, 25.24, 26.08, 25.28, 24.22, 24.76, 24.28, 24.28, 23.44, 22.12, 22.24, 22.02, 22.78, 23.62, 23.4, 22.92, 22.08, 23.44, 23.6, 23.78, 22.82, 22.96, 22.36, 21.64, 22.48, 22.6, 23.22, 22.7, 21.82, 22.98, 23.38, 24.18, 18.86, 22.1, 23.44, 24.24, 23.5, 24, 24.2, 23.92, 23.48, 23.94, 23.7, 22.88, 23.06, 23.58, 22.74, 23.44, 23.32, 23.68, 23.7, 23.6, 23.7, 24.18, 25.66, 26.2, 26.04, 25.58, 25.7, 25.7, 24.58, 25.48, 25.4, 23.78, 23.44, 21.96, 23.56, 24.88, 26.84, 24.16, 22.3, 24.36, 25.2, 25.84, 26.12, 26.86, 27.52, 27.76, 25.72, 24.26, 26.12, 25.84, 25.6, 26.06, 27.14, 27.7, 27.44, 24.92, 21.58, 23.4, 26.12, 27.64, 27.54, 26.54, 26.32, 26.6, 28.58, 27.92, 25.96, 25.26, 25.96, 22.96, 25.5, 25.08, 24.22, 26.88, 28.9, 29.48, 29.54, 28.28, 29.38, 29.68, 26.86, 28.5, 26.04, 24.66, 26.36, 26.94, 27.54, 28.2, 27.54, 24.56, 26.68, 26.2, 25.24, 26.02, 28.94, 27.8, 28.26, 26.86, 26.52, 25.44, 26.48, 23.34, 25.88, 24.78, 25.78, 25.3, 26.16, 25.78, 27.78, 24.94, 25.58, 26.5, 27.9, 26.02, 24.26, 23.94, 24.2, 22.8, 23.64, 24, 25.2, 23.22, 22.18, 22.42, 25.18, 26.6, 25.8, 25.78, 26.46, 23.94, 24.6, 25.2, 25.82, 23.18, 23.98, 25.18, 24.88, 22.06, 21.84, 24.8, 25.96, 26.98, 27.08, 24.4, 23.28, 22.92, 23.86, 24.5, 24.16, 25.84, 24.78, 23.78, 23.84, 24.52, 25.04, 25.08, 24.34, 24.82, 26.76, 28.12, 27.22, 27.98, 28.84, 30.14, 27.64, 25.78, 26.82, 25.38, 25.32, 25.32, 26.32, 23.58, 24.42, 26.08, 24.5)
+coluna2a
+
+# Data Frame com as colunas 1 (data) e 2 (temperatura média compensada) 
+tabela <- data.frame(print(format(coluna1, "%d/%m/%Y")), coluna2)
+colnames(tabela) <- c("Data (ano=2018)", "Temperatura")
+tabela
+
+# Data Frame com as colunas 1 (data) e 2a (temperatura média compensada) - tabela construida 
+tabela <- data.frame(print(format(coluna1, "%d/%m/%Y")), coluna2a)
+colnames(tabela) <- c("Data (ano=2018)", "Temperatura (tabela construida)")
+tabela
+str(tabela)
+summary(tabela)
+```
+
+```{r Exercício 7}
+
+# Amplie o dataframe para que: 3ª coluna – média pluviometrica diária em Goiânia (mm/m2)
+
+# 3ª coluna – Precipitação diária em Goiâni, ano 2018 (dados INMET)
+dados <- read.csv("dados_mod.csv", header = TRUE, sep = ";", dec = ".")
+coluna3 <- dados[,3]
+coluna3
+
+# Data Frame com as colunas 1 (data) e 2 (temperatura média compensada) 
+tabela <- data.frame(print(format(coluna1, "%d/%m/%Y")), coluna2, coluna3)
+colnames(tabela) <- c("Data (ano=2018)", "Temperatura", "Precipitação")
+tabela
+```
+
+```{r Exercício 8}
+
+# Exiba um gráfico da curva de temperatura e outro dos índices de pluviometria de Goiânia para o ano de 2018.
+
+# Gráfico da curva de temperatura e pluviometria de Goiânia para 2018
+
+par(mfrow=c(1,1), bg="gray93") # Define quantos gráficos serão mostrados no mesmo dispositivo
+
+plot(coluna1, coluna2, type="b", main = "Gráfico da curva de temperatura de Goiânia para 2018", xlab = "Mês", ylab = "Temperatura Média Compensada")
+#lines(lowess(coluna1, coluna2), col=2, cex.main = 0.8)
+
+plot(coluna1, coluna2a, type="o", main = "Gráfico da curva de temperatura de Goiânia para 2018", xlab = "Mês", ylab = "Temperatura Média Compensada - (tabela construida)", col=2, cex.main = 0.8)
+
+plot(coluna1, coluna3, type="p", main = "Gráfico de pluviometria de Goiânia para 2018", xlab = "Mês", ylab = "Temperatura Precipitação", col=4, cex.main = 1, cex.lab = 0.75, pch = 5, las=2)
+
+# obs: type = "p" para pontos, "l" para linhas, "b" para pontos e linhas, "c" para linhas descontínuas nos pontos,  "o" para pontos sobre as linhas,"n" para nenhum gráfico, apenas a janela.
+
+```
+
+```{r Exercício 9}
+
+# Qual a temperatura e a pluviometria média de Goiânia em 2018?
+tempmedia <- mean(coluna2, na.rm = TRUE)
+pluvmedia <- mean(coluna3, na.rm = TRUE)
+
+cat("Temperatura média de Goiânia em 2018 =", tempmedia, "°C")
+cat("\n")
+cat("Pluviometria média de Goiânia em 2018 =", pluvmedia, "mm/m2")
+
+
+# Qual o desvio-padrão (s) dessas duas medidas de tendência central?
+
+sd_temp <- sd(coluna2, na.rm = TRUE)
+sd_pluv <- sd(coluna3, na.rm = TRUE)
+
+cat("\n")
+cat("Desvio Padrão dos dados de Temperatura de Goiâia em 2018 =", sd_temp)
+cat("\n")
+cat("Desvio Padrão dos dados de Pluviometria de Goiânia em 2018 =", sd_pluv)
+
+# Exiba mais essas duas informações nos dois gráficos anteriores (exercício n. 8).
+
+# Descreva o comportamento sazonal do clima de Goiânia no ano de 2018.
+
+```
+
+```{r Exercício 10}
+
+# Há outliers nesses dois conjuntos de dados?
+
+# Box Plot para Temperatura
+par(mfrow=c(2,1), bg="gray93")
+par(mar=c(2,5,2,2))
+
+# Box Plot:: outline = TRUE # Posta os outliers
+boxplot(coluna2, na.rm = TRUE, outline = TRUE, main = "Box Plot da temperatura de Goiânia-2018", ylab = "Temp Média Comp.", col = "orange" )
+
+# Box Plot:: outline = FALSE # Não posta os outliers  
+boxplot(coluna2, outline = FALSE, main = "Box Plot da temperatura de Goiânia-2018", ylab = "Temp Média Comp.", col = "pink" )
+
+# Box Plot para Pluviometria
+
+par(mfrow=c(1,1), bg="gray93")
+par(mar=c(2,5,2,2))
+
+# Box Plot:: outline = TRUE # Posta os outliers
+boxplot(coluna3, na.rm = TRUE, outline = TRUE, main = "Box Plot da Pluviometria de Goiânia-2018", ylab = "Precipitação", col = "orange" )
+
+par(mfrow=c(1,1), bg="gray93")
+# Box Plot:: outline = FALSE # Não posta os outliers  
+boxplot(coluna3, outline = FALSE, main = "Box Plot da Pluviometria de Goiânia-2018", ylab = "Precipitação", col = "pink" )
+
+#Qual o valor da media e do desvio-padrão (s) se esses outliers forem desconsiderados?
+
+# Para a Temperatura antes de retirar os outliers
+cat("Medidas Estatisticas para Temperatura (considerando todas as medidas - outliers)")
+cat("\n")
+
+# média da Temperatura
+media_temp1 = mean(coluna2, na.rm = TRUE)
+cat("média =", media_temp1) 
+cat("\n")
+
+# desvio padrão
+sd_temp1 = sd(coluna2, na.rm = TRUE)
+cat("Desvio Padrão =", sd_temp1) 
+cat("\n")
+
+# Valor máximo e mínimo
+max_temp1 = max(coluna2, na.rm = TRUE)
+min_temp1 = min(coluna2, na.rm = TRUE)
+cat("Valor máximo=", max_temp1)
+cat("\n")
+cat("valor mínimo=", min_temp1)
+cat("\n")
+
+# Mediana
+mediana_temp1 = median(coluna2, na.rm = TRUE)
+cat("Mediana=", mediana_temp1)
+cat("\n")
+
+# Quantil
+quantil_temp1 = quantile(coluna2, na.rm = TRUE)
+cat("Quantil(min, 1 Quantil, Mediana, 3 Quantil, Max) =", quantil_temp1, "\n")
+
+# Função Summary retona toda a Estatística Descritiva
+cat("\n")
+cat("Função Summary - Descreve toda a Estátistica Descritiva - Tabela Temperatura (com outliers)", "\n")
+summary(coluna2)
+cat("\n")
+
+# Para a Temperatura antes de retirar os outliers
+cat("Medidas Estatisticas para Temperatura (retirando os outliers)")
+cat("\n")
+coluna2_semoutliers <- subset(coluna2, coluna2 > 23.7 & coluna2 < 26.31)
+coluna2_semoutliers
+cat("\n")
+cat("Função Summary - Descreve toda a Estátistica Descritiva - Tabela Temperatura (sem outliers)", "\n")
+summary(coluna2_semoutliers)
+
+ 
+
+# OPERADOR         DESCRIÇÃO                    
+#=========================================
+#
+#   ==             igual
+#   !=             diferente
+#   >              maior          
+#   <              menor                    
+#   >=             maior ou igual
+#   <=             menor ou igual                  
+#   &              e (and)               
+#   |              ou (or)        
+#   !              não
+#  is.na()        valor faltante ou não numérico
+
+```
+
+```{r Exercício 11}
+
+# Escreva uma função que forneça a sequência geradora do número de Fibonacci com 10 casas decimais.
+# Dica: Fn = Fn - 1 + Fn - 2
+# resp: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 - Para n=10
+
+fn <- function(n) {
+  
+  if(n == 0) {
+              fn <- 0
+              return(fn)
+              }
+  
+  if(n == 1) { 
+              fn <- 1
+              return(fn) # então para n=1, retornamos fn=1
+             }
+  
+  if(n == 2) {
+              fn <- vector(length = 2, mode = "integer")
+              fn[1] <- 1 # para posição 1 temos 1
+              fn[2] <- 1 # para posição 2 temos 1
+              return(fn)
+              }
+  
+  # Para n maior ou igual a 3 calculamos a serie de Fibonacci
+  if(n >= 3){
+  fn <- vector(length = n, mode = "integer")
+  fn[1] <- 1 # para posição 1 temos 1
+  fn[2] <- 1 # para posição 2 temos 1
+  for (i in 3:n) { 
+    fn[i] <- fn[i-1] + fn[i-2]
+    }
+  return(fn)  
+  }
+}
+
+cat("\n")
+cat("Para n=0, temos o número de Fibonacci:", fn(0), "\n")
+cat("Para n=1, temos o número de Fibonacci:", fn(1), "\n")
+cat("Para n=2, temos o número de Fibonacci:", fn(2), "\n")
+cat("Para n=3, temos o número de Fibonacci:", fn(3), "\n")
+cat("Para n=4, temos o número de Fibonacci:", fn(4), "\n")
+cat("Para n=5, temos o número de Fibonacci:", fn(5), "\n")
+cat("Para n=6, temos o número de Fibonacci:", fn(6), "\n")
+cat("Para n=7, temos o número de Fibonacci:", fn(7), "\n")
+cat("Para n=8, temos o número de Fibonacci:", fn(8), "\n")
+cat("Para n=9, temos o número de Fibonacci:", fn(9), "\n")
+cat("Para n=10, temos o número de Fibonacci:", fn(10), "\n")
+
+#Plote esse resultado em um gráfico.
+
+plot(fn(30), main = "Gráfico Fibonacci para n=30", ylab = "Fibonacci", xlab = "Número = 30", col = "orange", type="o")
+
+
+#Analisando esse gráfico, avalie se a convergência da sequência gerada para o número de ouro (fi) foi rápida? Justifique.
+# Função Convergência para número de ouro (fi)
+
+fi <- function(n) {
+  seq_fibonacci <- fn(n+1)
+  seq_fibonacci
+  nouro <- vector(length = n, mode = "double")
+    for (i in 1:n) { 
+    nouro[i] <- round((seq_fibonacci[i+1] / seq_fibonacci[i]), 10)
+    }
+  return(nouro)  
+}
+cat("Para n=1, temos o sequencia gerada para o número de ouro(fi):", fi(1), "\n")
+cat("Para n=5, temos o sequencia gerada para o número de ouro(fi):", fi(5), "\n")
+cat("Para n=10, temos o sequencia gerada para o número de ouro(fi):", fi(10), "\n")
+cat("Para n=30, temos o sequencia gerada para o número de ouro(fi):", fi(30), "\n")
+
+#Plote esse resultado em um gráfico.
+
+plot(fi(30), main = "Gráfico de convergência da sequência gerada para o número de ouro (fi), n=30", ylab = "", xlab = "Número = 30", col = "green", type="o")
+
+```
+
+```{r Exercício 12}
+
+# Escreva uma função para gerar os números pares de 0 a um número inteiro n.
+
+# Primeiro iremos gerar um vetor com N posições, incluindo a posição 0. Depois geramos uma sequência de números pares.
+
+npar <- function(n) {
+              if(n == 0) {
+                          result <- 0
+                          return(result)
+                          }
+              if(n == 1) {
+                          result <- 0
+                          return(result)
+                         }  
+              
+              if(n > 1) {
+                         vetorn <- 1:(n+1)
+                         vetorn[1] <- 0
+                         vetorn[2] <- 1
+                         result <- vector(length = n, mode = "integer")
+                
+                         for(i in 3:(n+1)) {  
+                                           vetorn[i] <- vetorn[i-1] + 1 # gera vetor 0 até n posições : 0, 1, 2, 3 4, ....
+                                           }
+                         for(i in 1:(n+1)) {  
+                                   if(vetorn[i] %% 2 == 0) {
+                                                           result[i] <- vetorn[i]
+                                                           }
+                                    else {
+                                         result[i] <- NA
+                                         }
+                                   }    
+                                return(na.exclude(result)) 
+                        }
+}
+
+cat("Os números pares de 0 até 50 são:", npar(50), "\n") 
+
+# x%%y	Resto da divisão de x por y (módulo)
+
+# E outra para gerar os números ímpáres de 0 a a um número inteiro n.
+
+# Primeiro iremos gerar um vetor com N posições, incluindo a posição 0. Depois geramos uma sequência de números ímpares.
+
+nimpar <- function(n) {
+              if(n == 0) {
+                          result <- 0
+                          return(result)
+                          }
+              if(n == 1) {
+                          result <- 0
+                          return(result)
+                         }  
+              
+              if(n > 1) {
+                         vetorn <- 1:(n+1)
+                         vetorn[1] <- 0
+                         vetorn[2] <- 1
+                         result <- vector(length = n, mode = "integer")
+                
+                         for(i in 3:(n+1)) {  
+                                           vetorn[i] <- vetorn[i-1] + 1
+                                           }
+                         for(i in 1:(n+1)) {  
+                                   if(vetorn[i] %% 2 != 0) {
+                                                           result[i] <- vetorn[i]
+                                                           }
+                                    else {
+                                         result[i] <- NA
+                                         }
+                                   }    
+                                return(na.exclude(result))
+                        }
+}        
+cat("Os números ímpares de 0 até 50 são:", nimpar(50))
+```
